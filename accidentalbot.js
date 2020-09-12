@@ -29,10 +29,6 @@ function sendToAll(packet) {
 
 setInterval(saveBackup, 300000);
 
-function saveBackup() {
-    // TODO: Figure out what to do here.
-}
-
 function handleNewSuggestion(from, message) {
     var title = '';
     if (message.match(/^!s(?:uggest)?\s+(.+)/)) {
@@ -114,11 +110,24 @@ function handleNewLink(from, message) {
     }
 }
 
+function handleMarcosRecycling(from, message) {
+    if (message.startsWith('!recycle')) {
+        message = message.substring(6);
+    } else if (message.startsWith('!recycling')) {
+        message = message.substring(3);
+    } else if (message.startsWith('!r')) {
+        message = message.substring(3);
+    }
+
+    client.say("Marco\\, " + from + " is reminding you to take out the cardboard recycling. Did you do it yet? (by the way you no longer need a to do manager)")
+}
+
 function handleHelp(from) {
     client.say(from, 'Options:');
     client.say(from, '!s {title} - suggest a title (in ' + channel + ' only).');
     client.say(from, '!votes - get the three most highly voted titles.');
     client.say(from, '!link {URL} - suggest a link.');
+    client.say(from, '!recycle {recycle} - reminds marco to take out his cardboard recycling, a Wednesday night activity')
     client.say(from, '!help - see this message.');
     client.say(from, 'To see titles/links, go to: ' + webAddress);
 }
@@ -171,6 +180,18 @@ client.addListener('message#', function (from, to, message) {
 client.addListener('pm', function (from, message) {
    if (message.startsWith('!s')) {
         client.say(from, "I'm sorry, suggestions can only be made in " + channel + ".");
+   } 
+});
+
+client.addListener('message#', function (from, to, message) {
+   if (message.startsWith("!r ")) {
+       handleNewSuggestion(from, message);
+   } 
+});
+
+client.addListener('pm', function (from, message) {
+   if (message.startsWith('!r')) {
+        client.say(from, "I'm sorry, to remind Marco to take out his cardboard recycling, you need to do it in the " + channel + ".");
    } 
 });
 
